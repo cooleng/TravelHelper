@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<litepal>
+
+    <dbname value="travel_helper.db" />
+    <version value="1" />
+
+    <!-- 数据模型-->
+    <list>
+        <mapping class="com.xiaomo.travelhelper.model.memo.MemoListItemModel"/>
+        <mapping class="com.xiaomo.travelhelper.model.memo.MemoEditData"/>
+    </list>
+
+
+</litepal>

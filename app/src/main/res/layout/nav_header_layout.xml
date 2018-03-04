@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:background="@color/tab_normal_color">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/circle_image_view"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_centerInParent="true"
+        android:src="@mipmap/default_head_image"/>
+
+    <TextView
+        android:layout_marginTop="20dp"
+        android:id="@+id/name_text_view"
+        android:layout_below="@id/circle_image_view"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="小小莫是我"
+        android:textColor="@android:color/white"
+        android:textSize="25sp"/>
+
+</RelativeLayout>
