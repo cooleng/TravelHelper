@@ -2,7 +2,9 @@
 毕设-出行助手 APP（Android） 
 
 技术栈：rxjava + retrofit + butterKnife + netty
+<br/>
 功能：  搜周边、路线规划、备忘录、通讯录、朋友圈发帖、聊天等
+<br/>
 效果：
 
 <div>
