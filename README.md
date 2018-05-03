@@ -34,4 +34,4 @@
   [3]: ./images/备忘录列表.png "备忘录.png"
   [4]: ./images/通讯录.png "通讯录.png"
   [5]: ./images/评论.png "朋友圈.png"
-  [6]: ./images/聊天ng "聊天.png"
+  [6]: ./images/聊天.png "聊天.png"
