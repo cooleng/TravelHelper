@@ -2,6 +2,8 @@ package com.xiaomo.travelhelper.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.view.Display;
+import android.view.WindowManager;
 
 import net.bither.util.CompressTools;
 import net.bither.util.FileUtil;
@@ -14,10 +16,6 @@ public class UIUtils {
      * dip-->px
      */
     public static int dip2Px(Context context,int dip) {
-        // px/dip = density;
-        // density = dpi/160
-        // 320*480 density = 1 1px = 1dp
-        // 1280*720 density = 2 2px = 1dp
 
         float density = context.getResources().getDisplayMetrics().density;
         int px = (int) (dip * density + 0.5f);
@@ -33,6 +31,17 @@ public class UIUtils {
     public static int sp2px(Context context,float spValue) {
         final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
         return (int) (spValue * fontScale + 0.5f);
+    }
+
+    /**
+     * 获取屏幕宽度
+     * @param context
+     * @return
+     */
+    public static int getDisplayWidth(Context context) {
+        Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        return display.getWidth();
+
     }
 
 

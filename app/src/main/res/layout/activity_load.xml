@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_ffffff"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true">
+
+    <com.xiaomo.travelhelper.view.DrawableTextView
+        android:id="@+id/load_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:drawablePadding="10dp"
+        android:gravity="center"
+        android:text="欢迎使用出行助手"
+        android:textColor="@color/grey_2"
+        android:textSize="18sp"
+        app:drawableHeight="40dp"
+        app:drawableWidth="120dp"
+        app:topDrawable="@mipmap/travelhelper_icon" />
+
+</RelativeLayout>

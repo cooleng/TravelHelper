@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/colorAccent">
+
+        <RelativeLayout
+            android:layout_width="48dp"
+            android:id="@+id/update_user_back_iv"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:scaleType="centerCrop"
+                android:layout_centerInParent="true"
+                android:src="@mipmap/back_icon"/>
+
+        </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/update_user_title_tv"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:text="修改昵称"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="13dp">
+
+
+        <EditText
+            android:id="@+id/update_user_et"
+            android:layout_width="0dp"
+            android:layout_height="55dp"
+            android:layout_weight="4"
+            android:background="@null"
+            android:hint="输入昵称"
+            android:singleLine="true"
+            android:textColor="@color/color_999999"
+            android:textColorHint="@color/color_999999"
+            android:textSize="14dp" />
+
+        <Button
+            android:id="@+id/update_user_sure_btn"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/bg_btn_login_selected"
+            android:text="确定"
+            android:layout_marginRight="10dp"
+            android:textColor="@color/color_ffffff"
+            android:textSize="16dp" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/color_2e7d32"/>
+
+
+</LinearLayout>
+
+
+
+

@@ -14,17 +14,17 @@ public class MemoDao {
 
     public List<MemoListItemModel> findAll(){
 
-        return DataSupport.findAll(MemoListItemModel.class);
+        return DataSupport.findAll(MemoListItemModel.class,true);
     }
 
     public MemoListItemModel findById(Long id){
 
-        return  DataSupport.find(MemoListItemModel.class,id);
+        return  DataSupport.find(MemoListItemModel.class,id,true);
     }
 
     public List<MemoListItemModel> findByLikeTitle(String title){
 
-        return DataSupport.where("title like ?",title).find(MemoListItemModel.class);
+        return DataSupport.where("title like ?",title).find(MemoListItemModel.class,true);
     }
 
     public boolean update(MemoListItemModel model){

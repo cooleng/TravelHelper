@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/chat_from_left_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="56dp">
+
+        <RelativeLayout
+            android:id="@+id/from_img_layout"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp">
+
+            <ImageView
+                android:id="@+id/from_img_iv"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_centerHorizontal="true"
+                android:src="@mipmap/default_head_image"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_toRightOf="@id/from_img_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dp"
+            android:paddingRight="10dp">
+
+            <TextView
+                android:id="@+id/from_left_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/chat_from_bg_normal"
+                android:text="没打死干哈的算法的施蒂利克哈三没打死干哈的算法的施蒂利克哈三联客户发的手机换了卡是否离开家联客户发的手机换了卡是否离开家"/>
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/chat_to_right_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="56dp">
+
+        <RelativeLayout
+            android:id="@+id/to_img_layout"
+            android:layout_alignParentRight="true"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp">
+
+            <ImageView
+                android:id="@+id/to_img_iv"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_centerHorizontal="true"
+                android:src="@mipmap/default_head_image"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_toLeftOf="@id/to_img_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dp"
+            android:paddingLeft="10dp">
+
+            <TextView
+                android:id="@+id/to_right_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/chat_to_bg_normal"
+                android:text="没打死干哈的算换了卡是否离开家"/>
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+
+</LinearLayout>

@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/drawer_layout"
+    android:orientation="vertical"
     tools:context="com.xiaomo.travelhelper.MainActivity">
 
-    <!-- 主视图-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
 
         <com.xiaomo.travelhelper.view.TopBarLayout
             android:id="@+id/top_bar_layout"
@@ -27,6 +22,11 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/tab_gb"/>
+
         <com.xiaomo.travelhelper.view.BottomBarLayout
             android:id="@+id/bottom_bar_layout"
             android:layout_width="match_parent"
@@ -34,14 +34,14 @@
             android:orientation="horizontal"
             android:gravity="center"
             android:layout_gravity="center"
-            android:background="@color/tab_gb">
+            android:background="@color/grey_1">
 
             <com.xiaomo.travelhelper.view.BottomBarItem
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
-                app:iconNormal="@mipmap/tab_home_normal"
-                app:iconSelected="@mipmap/tab_home_selected"
+                app:iconNormal="@mipmap/discover"
+                app:iconSelected="@mipmap/discover_green"
                 app:iconWidth="35dp"
                 app:iconHeight="35dp"
                 app:itemText="发现"
@@ -55,24 +55,23 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
-                app:iconNormal="@mipmap/tab_video_normal"
-                app:iconSelected="@mipmap/tab_video_selected"
+                app:iconNormal="@mipmap/contacts"
+                app:iconSelected="@mipmap/contacts_green"
                 app:iconWidth="35dp"
                 app:iconHeight="35dp"
-                app:itemText="备忘"
+                app:itemText="好友"
                 app:textColorNormal="@color/tab_normal_color"
                 app:textColorSelected="@color/tab_selected_color"
                 app:itemTextSize="10sp"
                 app:itemMarginTop="-5dp"
                 />
 
-
             <com.xiaomo.travelhelper.view.BottomBarItem
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
-                app:iconNormal="@mipmap/tab_micro_normal"
-                app:iconSelected="@mipmap/tab_micro_selected"
+                app:iconNormal="@mipmap/chats"
+                app:iconSelected="@mipmap/chats_green"
                 app:iconWidth="35dp"
                 app:iconHeight="35dp"
                 app:itemText="圈子"
@@ -86,11 +85,11 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
-                app:iconNormal="@mipmap/tab_me_normal"
-                app:iconSelected="@mipmap/tab_me_selected"
+                app:iconNormal="@mipmap/about_me"
+                app:iconSelected="@mipmap/about_me_green"
                 app:iconWidth="35dp"
                 app:iconHeight="35dp"
-                app:itemText="好友"
+                app:itemText="我的"
                 app:textColorNormal="@color/tab_normal_color"
                 app:textColorSelected="@color/tab_selected_color"
                 app:itemTextSize="10sp"
@@ -99,22 +98,4 @@
 
         </com.xiaomo.travelhelper.view.BottomBarLayout>
 
-
-    </LinearLayout>
-
-    <!--侧滑菜单区-->
-    <android.support.percent.PercentFrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="start">
-
-        <android.support.design.widget.NavigationView
-            app:layout_widthPercent="90%"
-            app:layout_heightPercent="100%"
-            android:id="@+id/navigation_view"
-            app:menu="@menu/nav_menu"
-            app:headerLayout="@layout/nav_header_layout" />
-
-    </android.support.percent.PercentFrameLayout>
-
-</android.support.v4.widget.DrawerLayout>
+</LinearLayout>

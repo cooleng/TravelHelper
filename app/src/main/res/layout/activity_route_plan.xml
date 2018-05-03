@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+
+    <!--顶部输入选择布局-->
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/grey_1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@color/white"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:id="@+id/route_plan_close_layout"
+                android:layout_width="56dp"
+                android:layout_height="match_parent"
+                android:onClick="backLayoutClick">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@mipmap/back_icon_1"
+                    android:layout_centerInParent="true"/>
+
+            </RelativeLayout>
+
+            <EditText
+                android:id="@+id/route_plan_city_st_et"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:hint="起点城市"
+                android:textSize="14sp"
+                android:textColor="@color/grey_2"
+                android:background="@null" />
+
+            <EditText
+                android:id="@+id/route_plan_detail_st_et"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="match_parent"
+                android:hint="市内地点"
+                android:textSize="14sp"
+                android:textColor="@color/grey_2"
+                android:background="@null" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="@dimen/dim56dp"
+            android:layout_height="1dp"
+            android:background="@color/white"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:paddingLeft="56dp"
+            android:orientation="horizontal"
+            android:background="@color/white">
+
+
+            <EditText
+                android:id="@+id/route_plan_city_end_et"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:hint="终点城市"
+                android:textSize="14sp"
+                android:textColor="@color/grey_2"
+                android:background="@null" />
+
+            <EditText
+                android:id="@+id/route_plan_detail_end_et"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="match_parent"
+                android:hint="市内地点"
+                android:textSize="14sp"
+                android:textColor="@color/grey_2"
+                android:background="@null" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="@dimen/dim56dp"
+            android:layout_height="1dp"
+            android:background="@color/white"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/mass"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dip"
+                android:layout_marginRight="2dip"
+                android:onClick="searchButtonProcess"
+                android:background="@color/white"
+                android:text="跨城"/>
+
+            <Button
+                android:id="@+id/drive"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dip"
+                android:layout_marginRight="2dip"
+                android:onClick="searchButtonProcess"
+                android:background="@color/white"
+                android:text="驾车" />
+
+            <Button
+                android:id="@+id/transit"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dip"
+                android:layout_marginRight="2dip"
+                android:onClick="searchButtonProcess"
+                android:background="@color/white"
+                android:text="公交"/>
+
+            <Button
+                android:id="@+id/walk"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dip"
+                android:layout_marginRight="2dip"
+                android:onClick="searchButtonProcess"
+                android:background="@color/white"
+                android:text="步行"/>
+
+            <Button
+                android:id="@+id/bike"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dip"
+                android:layout_marginRight="2dip"
+                android:onClick="searchButtonProcess"
+                android:background="@color/white"
+                android:text="骑行"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <com.baidu.mapapi.map.MapView
+            android:id="@+id/map"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:clickable="true" />
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignWithParentIfMissing="false"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="false"
+            android:layout_marginBottom="10dip" >
+
+            <Button
+                android:id="@+id/pre"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="2dip"
+                android:layout_marginRight="2dip"
+                android:layout_weight="1.0"
+                android:background="@mipmap/pre_icon"
+                android:onClick="nodeClick" />
+
+            <Button
+                android:id="@+id/next"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="2dip"
+                android:layout_marginRight="2dip"
+                android:layout_weight="1.0"
+                android:background="@mipmap/next_icon"
+                android:onClick="nodeClick" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

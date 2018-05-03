@@ -1,24 +1,24 @@
 package com.xiaomo.travelhelper;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lzy.imagepicker.ImagePicker;
+import com.lzy.imagepicker.bean.ImageItem;
+import com.lzy.imagepicker.ui.ImageGridActivity;
+import com.lzy.imagepicker.view.CropImageView;
+import com.qmuiteam.qmui.util.QMUIDrawableHelper;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
@@ -28,31 +28,34 @@ import com.xiaomo.travelhelper.dao.MemoDao;
 import com.xiaomo.travelhelper.model.memo.MemoConstants;
 import com.xiaomo.travelhelper.model.memo.MemoEditData;
 import com.xiaomo.travelhelper.model.memo.MemoListItemModel;
+import com.xiaomo.travelhelper.util.DateTimeUtil;
 import com.xiaomo.travelhelper.util.PermissionUtil;
 import com.xiaomo.travelhelper.util.SDCardUtil;
-import com.xiaomo.travelhelper.util.UIUtils;
-import com.xiaomo.travelhelper.view.richtext.DeletableEditText;
+import com.xiaomo.travelhelper.view.datepicker.CustomDatePicker;
+import com.xiaomo.travelhelper.view.img.GlideImageLoader;
 import com.xiaomo.travelhelper.view.richtext.RichTextEditor;
 
-import org.litepal.LitePal;
-import org.litepal.crud.DataSupport;
-
-import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.xiaomo.travelhelper.SendNewsActivity.REQUEST_CODE_SELECT;
+
+/**
+ * 备忘录编辑 activity 页面
+ */
 public class MemoEditActivity extends AppCompatActivity {
 
     private long mRecordId;
     private int mRequestCode;
-    private Uri mPhotoUri;
     private MemoListItemModel mModel;
     private MemoDao mMemoDao;
+    private QMUIBottomSheet mQMUIBottomSheet;
 
-    @BindView(R.id.memo_back_iv) ImageView mBackIv;
+    @BindView(R.id.memo_edit_back_iv) RelativeLayout mBackIv;
     @BindView(R.id.memo_share_iv) ImageView mShareIv;
     @BindView(R.id.memo_save_iv) ImageView mSaveIv;
     @BindView(R.id.memo_delete_iv) ImageView mDeleteIv;
@@ -61,7 +64,10 @@ public class MemoEditActivity extends AppCompatActivity {
     @BindView(R.id.memo_time_tv) TextView mTimeTv;
     @BindView(R.id.memo_month_tv) TextView mMonthTv;
     @BindView(R.id.memo_rich_et) RichTextEditor mRichTextEditor;
-    @BindView(R.id.memo_title_et) DeletableEditText mTitleEt;
+
+
+    public static final int REQUEST_CODE_SELECT = 100;
+    private int maxImgCount = 1;               //允许选择图片最大数
 
 
 
@@ -71,7 +77,9 @@ public class MemoEditActivity extends AppCompatActivity {
         setContentView(R.layout.activity_memo_edit);
         ButterKnife.bind(this);
         initDataFromStarter();
+        initImagePicker();
     }
+
 
     /**
      * 获取启动传递的数据
@@ -87,20 +95,107 @@ public class MemoEditActivity extends AppCompatActivity {
         if(mRequestCode == MemoConstants.REQUEST_DETAIL){
             mModel = mMemoDao.findById(mRecordId);
             if(mModel != null){
+                mRichTextEditor.clearAllLayout();
                 mTimeTv.setText(mModel.getCreateTime());
                 mMonthTv.setText(mModel.getCreateMonth());
-                mTitleEt.setText(mModel.getTitle());
-                List<MemoEditData> editDataList = mModel.getEditDataList();
-                if(editDataList != null){
-                    for(MemoEditData data : editDataList){
-                        if(!TextUtils.isEmpty(data.getInputStr())){
-                            mRichTextEditor.addEditTextAtIndex(mRichTextEditor.getLastIndex()+1,data.getInputStr());
-                        }
-                        if(!TextUtils.isEmpty(data.getImagePath())){
-                            String path = data.getImagePath();
-                            mRichTextEditor.insertImage(BitmapFactory.decodeFile(path),path);
+                mRichTextEditor.showMemoEditData(mModel.getEditDataList());
+            }
+        }
+    }
+
+    /**
+     * 跳转到 MemoEditActivity
+     */
+    public static void actionStart(AppCompatActivity context, int requestCode, long recordId){
+
+        Intent intent = new Intent(context,MemoEditActivity.class);
+        intent.putExtra(MemoConstants.KEY_RECORD_ID,recordId);
+        intent.putExtra(MemoConstants.KEY_REQUEST_CODE,requestCode);
+        context.startActivityForResult(intent,requestCode);
+        context.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+    }
+
+    private void saveDataAndBack(){
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<MemoEditData> editDataList = mRichTextEditor.buildMemoEditData();
+                if(editDataList != null && editDataList.size() > 0){
+
+                    if(mModel == null){
+                        mModel = new MemoListItemModel();
+                        mModel.setCreateTime(DateTimeUtil.getDayAndMinute());
+                        mModel.setCreateMonth(DateTimeUtil.getYearAndMonth());
+                    }else{
+                        List<MemoEditData> savedDataList = mModel.getEditDataList();
+                        if(savedDataList != null && savedDataList.size() > 0){
+                            for(MemoEditData savedData : savedDataList){
+                                savedData.delete();
+                            }
                         }
                     }
+                    mModel.setEditDataList(editDataList);
+                    mMemoDao.save(mModel);
+                    for(MemoEditData data : editDataList){
+                        data.setModel(mModel);
+                        data.save();
+                    }
+                }
+            }
+        }).start();
+        setResult(RESULT_OK);
+        finish();
+    }
+
+    private void saveData(){
+
+        List<MemoEditData> editDataList = mRichTextEditor.buildMemoEditData();
+        if(editDataList == null || editDataList.size() <= 0){
+            Toast.makeText(MemoEditActivity.this,"正文为空，保存失败",Toast.LENGTH_SHORT).show();
+        }else {
+
+            if (mModel == null) {
+                mModel = new MemoListItemModel();
+                mModel.setCreateTime(DateTimeUtil.getDayAndMinute());
+                mModel.setCreateMonth(DateTimeUtil.getYearAndMonth());
+            }else{
+                List<MemoEditData> savedDataList = mModel.getEditDataList();
+                if(savedDataList != null && savedDataList.size() > 0){
+                    for(MemoEditData savedData : savedDataList){
+                        savedData.delete();
+                    }
+                }
+            }
+            mModel.setEditDataList(editDataList);
+            mMemoDao.save(mModel);
+            for (MemoEditData data : editDataList) {
+                data.setModel(mModel);
+                data.save();
+            }
+            Toast.makeText(MemoEditActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        // 保存数据并返回
+        saveDataAndBack();
+        overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
+            //添加图片返回
+            if (data != null && requestCode == REQUEST_CODE_SELECT) {
+                ArrayList<ImageItem> images = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+                if (images != null && !images.isEmpty()) {
+                      mRichTextEditor.insertImage(images.get(0).path);
                 }
             }
         }
@@ -113,7 +208,7 @@ public class MemoEditActivity extends AppCompatActivity {
         saveData();
     }
 
-    @OnClick(R.id.memo_back_iv)
+    @OnClick(R.id.memo_edit_back_iv)
     public void saveAndBack(){
         // 保存数据并返回
         saveDataAndBack();
@@ -151,7 +246,11 @@ public class MemoEditActivity extends AppCompatActivity {
         itemWithSwitch.getSwitch().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Toast.makeText(MemoEditActivity.this, "checked = " + isChecked, Toast.LENGTH_SHORT).show();
+                if(mQMUIBottomSheet != null){
+                    mQMUIBottomSheet.dismiss();
+                    mQMUIBottomSheet = null;
+                }
+                alarm();
             }
         });
 
@@ -160,7 +259,7 @@ public class MemoEditActivity extends AppCompatActivity {
                 .addItemView(itemWithSwitch, null)
                 .addTo(qmuiGroupListView);
 
-        new QMUIBottomSheet.BottomListSheetBuilder(MemoEditActivity.this)
+        mQMUIBottomSheet = new QMUIBottomSheet.BottomListSheetBuilder(MemoEditActivity.this)
                 .addHeaderView(qmuiGroupListView)
                 .addItem("截图")
                 .addItem("发送到桌面")
@@ -168,11 +267,61 @@ public class MemoEditActivity extends AppCompatActivity {
                     @Override
                     public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
                         dialog.dismiss();
-                        Toast.makeText(MemoEditActivity.this, "Item " + (position + 1), Toast.LENGTH_SHORT).show();
+                        if(position == 0){
+                            captureView();
+                        }
                     }
                 })
-                .build()
-                .show();
+                .build();
+
+        mQMUIBottomSheet.show();
+
+    }
+
+    /**
+     * TODO 闹钟提醒
+     */
+    private void alarm(){
+
+        CustomDatePicker picker = new CustomDatePicker(MemoEditActivity.this, new CustomDatePicker.ResultHandler() {
+            @Override
+            public void handle(String time) { // 回调接口，获得选中的时间
+
+               /* AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                Intent intent = new Intent(MemoEditActivity.this,AlarmManager.class);
+                PendingIntent pi = PendingIntent.getBroadcast(MemoEditActivity.this,MemoConstants.REQUEST_ALARM
+                        ,intent,0);
+                alarmManager.set(AlarmManager.RTC_WAKEUP,System.currentTimeMillis() + 1000*15,pi);*/
+                Toast.makeText(MemoEditActivity.this,"你设定的提醒为 " + time,Toast.LENGTH_SHORT).show();
+            }
+        }, "2017-01-01 00:00", "2020-01-01 00:00"); // 初始化日期格式请用：yyyy-MM-dd HH:mm，否则不能正常运行
+        picker.showSpecificTime(true); // 显示时和分
+        picker.setIsLoop(true); // 允许循环滚动
+        picker.show(DateTimeUtil.getCurrentTime());
+
+    }
+
+    /**
+     * 截图
+     */
+    private void captureView(){
+
+        QMUIDialog.CustomDialogBuilder dialogBuilder = new QMUIDialog.CustomDialogBuilder(MemoEditActivity.this);
+        dialogBuilder.setLayout(R.layout.drawablehelper_createfromview);
+        final QMUIDialog dialog = dialogBuilder.setTitle("截图").create();
+        ImageView displayImageView = dialog.findViewById(R.id.createFromViewDisplay);
+        Bitmap createFromViewBitmap = QMUIDrawableHelper.createBitmapFromView(mRichTextEditor);
+        displayImageView.setImageBitmap(createFromViewBitmap);
+
+        displayImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MemoEditActivity.this,"截图已保存",Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
     private void showSimpleBottomSheetGrid() {
@@ -191,31 +340,17 @@ public class MemoEditActivity extends AppCompatActivity {
                         switch (tag) {
                             case TAG_GET_CAMERA:
                                 // 启动相机
-                                if(!PermissionUtil.isPermissions(MemoEditActivity.this,
-                                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE
-                                        ,Manifest.permission.CAMERA})){
-
-                                    PermissionUtil.requestPermissionsCameraImg(MemoEditActivity.this
-                                            ,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE
-                                                    ,Manifest.permission.WRITE_EXTERNAL_STORAGE
-                                                    ,Manifest.permission.CAMERA});
-                                }else {
-                                    mPhotoUri = SDCardUtil.startCamera(MemoEditActivity.this,SDCardUtil.getSystemCameraPath());
-                                }
+                                ImagePicker.getInstance().setSelectLimit(maxImgCount);
+                                Intent intent = new Intent(MemoEditActivity.this, ImageGridActivity.class);
+                                intent.putExtra(ImageGridActivity.EXTRAS_TAKE_PICKERS, true); // 是否是直接打开相机
+                                startActivityForResult(intent, REQUEST_CODE_SELECT);
 
                                 break;
                             case TAG_GET_LOCAL:
-
-                                if(!PermissionUtil.isPermissions(MemoEditActivity.this
-                                        ,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE
-                                                ,Manifest.permission.WRITE_EXTERNAL_STORAGE})){
-
-                                    PermissionUtil.requestPermissionsLocalImg(MemoEditActivity.this
-                                            ,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE
-                                                    ,Manifest.permission.WRITE_EXTERNAL_STORAGE});
-                                }else{
-                                    SDCardUtil.startImageMedia(MemoEditActivity.this);
-                                }
+                                // 启动图片选择器
+                                ImagePicker.getInstance().setSelectLimit(maxImgCount);
+                                Intent intent1 = new Intent(MemoEditActivity.this, ImageGridActivity.class);
+                                startActivityForResult(intent1, REQUEST_CODE_SELECT);
                                 break;
                         }
                     }
@@ -236,171 +371,34 @@ public class MemoEditActivity extends AppCompatActivity {
                     @Override
                     public void onClick(QMUIDialog dialog, int index) {
                         dialog.dismiss();
+                        if(mModel!= null){
+                            mModel.delete();
+                            List<MemoEditData> dataList = mModel.getEditDataList();
+                            for(MemoEditData data : dataList){
+                                data.delete();
+                            }
+                        }
                         Toast.makeText(MemoEditActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
+                        setResult(RESULT_OK);
+                        finish();
                     }
                 })
                 .show();
     }
 
-
-    /**
-     * 跳转到 MemoEditActivity
-     */
-    public static void actionStart(Context context,Fragment fragment, int requestCode, long recordId){
-
-        Intent intent = new Intent(context,MemoEditActivity.class);
-        intent.putExtra(MemoConstants.KEY_RECORD_ID,recordId);
-        intent.putExtra(MemoConstants.KEY_REQUEST_CODE,requestCode);
-        fragment.startActivityForResult(intent,requestCode);
-        ((AppCompatActivity)context).overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
-    }
-
-    private void saveDataAndBack(){
-
-        List<MemoEditData> editDataList = mRichTextEditor.buildMemoEditData();
-        String title = mTitleEt.getText().toString();
-        if(!TextUtils.isEmpty(title) && editDataList != null && editDataList.size() > 0){
-
-            if(mModel == null){
-                mModel = new MemoListItemModel();
-            }
-            mModel.setEditDataList(editDataList);
-            mModel.setTitle(title);
-            mModel.setCreateTime("1日 15:35");
-            mModel.setCreateMonth("2018年3月");
-            mMemoDao.save(mModel);
-        }
-        setResult(RESULT_OK);
-        finish();
-    }
-
-    private void saveData(){
-
-        List<MemoEditData> editDataList = mRichTextEditor.buildMemoEditData();
-        String title = mTitleEt.getText().toString();
-        if(TextUtils.isEmpty(title) || editDataList == null || editDataList.size() <= 0){
-            Toast.makeText(MemoEditActivity.this,"标题或者正文为空，保存失败",Toast.LENGTH_SHORT).show();
-        }else{
-
-            if(mModel == null){
-                mModel = new MemoListItemModel();
-            }
-            mModel.setEditDataList(editDataList);
-            mModel.setTitle(title);
-            mModel.setCreateTime("1日 15:35");
-            mModel.setCreateMonth("2018年3月");
-            mMemoDao.save(mModel);
-            Toast.makeText(MemoEditActivity.this,"保存成功",Toast.LENGTH_SHORT).show();
-        }
-
+    private void initImagePicker() {
+        ImagePicker imagePicker = ImagePicker.getInstance();
+        imagePicker.setImageLoader(new GlideImageLoader());   //设置图片加载器
+        imagePicker.setShowCamera(true);                      //显示拍照按钮
+        imagePicker.setCrop(true);                           //允许裁剪（单选才有效）
+        imagePicker.setSaveRectangle(true);                   //是否按矩形区域保存
+        imagePicker.setSelectLimit(maxImgCount);              //选中数量限制
+        imagePicker.setStyle(CropImageView.Style.RECTANGLE);  //裁剪框的形状
+        imagePicker.setFocusWidth(800);                       //裁剪框的宽度。单位像素（圆形自动取宽高最小值）
+        imagePicker.setFocusHeight(800);                      //裁剪框的高度。单位像素（圆形自动取宽高最小值）
+        imagePicker.setOutPutX(1000);                         //保存文件的宽度。单位像素
+        imagePicker.setOutPutY(1000);                         //保存文件的高度。单位像素
     }
 
 
-    @Override
-    public void onBackPressed() {
-        // 保存数据并返回
-        saveDataAndBack();
-        overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
-
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != RESULT_OK) {
-            return;
-        }
-        if (requestCode == MemoConstants.REQUEST_TAKE_PHOTO) {
-           handleTakePhotoCallback(data);
-        }else if(requestCode == MemoConstants.REQUEST_TAKE_LOCAL){
-            handleTakeLocalCallback(data);
-        }
-
-    }
-
-    /**
-     * 处理拍照回调
-     * @param data
-     */
-    private void handleTakePhotoCallback(Intent data){
-
-        Uri uri = null;
-        if (data != null && data.getData() != null) {
-            uri = data.getData();
-        }
-        if (uri == null) {
-            if (mPhotoUri != null) {
-                uri = mPhotoUri;
-            }
-        }
-        handleImageUri(uri);
-    }
-
-
-
-    /**
-     * 处理本地相册回调
-     * @param data
-     */
-    private void handleTakeLocalCallback(Intent data){
-
-        Uri uri = data.getData();
-        if(uri != null){
-            handleImageUri(uri);
-        }
-    }
-
-    // 压缩处理图片后复制到 App 指定默认目录
-    private void handleImageUri(Uri uri) {
-
-        String path = SDCardUtil.getFilePathByUri(MemoEditActivity.this,uri);
-        Bitmap bitmap = BitmapFactory.decodeFile(path);
-        mRichTextEditor.insertImage(bitmap,path);
-
-       /* UIUtils.compressBitmap(MemoEditActivity.this
-                , new File(SDCardUtil.getFilePathByUri(MemoEditActivity.this,uri)), SDCardUtil.getPictureDir()
-                , new UIUtils.CompressListener() {
-                    @Override
-                    public void onStart() {
-                        Log.i("compressBitmap-onStart","start");
-                    }
-
-                    @Override
-                    public void onSuccess(Object o,String path) {
-                        // 压缩成功插入到富文本
-                        Log.i("compressBitmap-success",path);
-                        Bitmap bitmap = (Bitmap) o;
-                        mRichTextEditor.insertImage(bitmap,path);
-
-                    }
-
-                    @Override
-                    public void onFail(String error) {
-                        Log.i("compressBitmap-onFail",error);
-                    }
-       });*/
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
-        switch (requestCode) {
-            case PermissionUtil.PERMISSIONS_REQUEST_CAMERA_IMG: {
-                if(PermissionUtil.checkRequestResult(grantResults)){
-                    SDCardUtil.startCamera(MemoEditActivity.this,SDCardUtil.getSystemCameraPath());
-                }else {
-                    Toast.makeText(MemoEditActivity.this,"无权限",Toast.LENGTH_SHORT);
-                }
-                return;
-            }
-            case PermissionUtil.PERMISSIONS_REQUEST_LOCAL_IMG:{
-                if(PermissionUtil.checkRequestResult(grantResults)){
-                    SDCardUtil.startImageMedia(MemoEditActivity.this);
-                }else {
-                    Toast.makeText(MemoEditActivity.this,"无权限",Toast.LENGTH_SHORT);
-                }
-                return;
-            }
-        }
-    }
 }

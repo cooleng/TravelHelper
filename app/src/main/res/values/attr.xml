@@ -42,4 +42,40 @@
         <attr name="textColor" format="color"/>
     </declare-styleable>
 
+    <!--侧边栏-->
+    <declare-styleable name="SideBar">
+        <attr name="scaleTime" format="integer"></attr>
+        <attr name="scaleItemCount" format="integer"></attr>
+    </declare-styleable>
+
+    <declare-styleable name="CollapsedTextView">
+        <attr name="collapsedLines" format="integer" />
+        <attr name="expandedText" format="string" />
+        <attr name="collapsedText" format="string" />
+        <attr name="expandedDrawable" format="reference" />
+        <attr name="collapsedDrawable" format="reference" />
+        <attr name="tipsGravity">
+            <flag name="end" value="0" />
+            <flag name="bottom" value="1" />
+        </attr>
+        <attr name="tipsColor" format="reference|color" />
+        <attr name="tipsUnderline" format="boolean" />
+        <attr name="tipsClickable" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="ImageNice9Layout">
+        <attr name="nice9_candrag" format="boolean" />
+        <attr name="nice9_itemMargin" format="dimension" />
+    </declare-styleable>
+
+
+    <declare-styleable name="drawableText">
+        <attr name="leftDrawable" format="reference|integer" />
+        <attr name="rightDrawable" format="reference|integer" />
+        <attr name="topDrawable" format="reference|integer" />
+        <attr name="bottomDrawable" format="reference|integer" />
+        <attr name="drawableWidth" format="dimension" />
+        <attr name="drawableHeight" format="dimension" />
+    </declare-styleable>
+
 </resources>

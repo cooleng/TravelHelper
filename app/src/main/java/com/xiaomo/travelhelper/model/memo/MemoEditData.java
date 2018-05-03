@@ -8,25 +8,25 @@ import org.litepal.crud.DataSupport;
 
 public class MemoEditData extends DataSupport {
 
-    private String inputStr;
-    private String imagePath;
+    private String key;
+    private String val;
 
     private MemoListItemModel model;
 
-    public String getInputStr() {
-        return inputStr;
+    public String getKey() {
+        return key;
     }
 
-    public void setInputStr(String inputStr) {
-        this.inputStr = inputStr;
+    public void setKey(String key) {
+        this.key = key;
     }
 
-    public String getImagePath() {
-        return imagePath;
+    public String getVal() {
+        return val;
     }
 
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
+    public void setVal(String val) {
+        this.val = val;
     }
 
     public MemoListItemModel getModel() {
@@ -35,5 +35,14 @@ public class MemoEditData extends DataSupport {
 
     public void setModel(MemoListItemModel model) {
         this.model = model;
+    }
+
+    @Override
+    public String toString() {
+        return "MemoEditData{" +
+                "key='" + key + '\'' +
+                ", val='" + val + '\'' +
+                ", model=" + model +
+                '}';
     }
 }

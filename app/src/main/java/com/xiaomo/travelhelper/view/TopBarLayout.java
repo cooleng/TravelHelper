@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.xiaomo.travelhelper.R;
 
@@ -17,9 +18,7 @@ public class TopBarLayout extends LinearLayout {
 
     private Context mContext;
     private View mView;
-    private ImageView mHeadImageView;
-    private ImageView mMoreView;
-    private ImageView mUpdateView;
+    private RelativeLayout mMoreView;
 
     public TopBarLayout(Context context) {
         this(context, (AttributeSet)null);
@@ -39,9 +38,7 @@ public class TopBarLayout extends LinearLayout {
 
     private void initView(){
         mView = View.inflate(this.mContext, R.layout.layout_top_bar, (ViewGroup)null);
-        this.mHeadImageView = (ImageView) mView.findViewById(R.id.top_bar_head_image);
-        this.mUpdateView = (ImageView) mView.findViewById(R.id.top_bar_update_view);
-        this.mMoreView = (ImageView) mView.findViewById(R.id.top_bar_more_view);
+        this.mMoreView = mView.findViewById(R.id.top_bar_more_view);
 
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
@@ -52,15 +49,9 @@ public class TopBarLayout extends LinearLayout {
     }
 
 
-    public ImageView getHeadImageView() {
-        return mHeadImageView;
-    }
 
-    public ImageView getMoreView() {
+    public RelativeLayout getMoreView() {
         return mMoreView;
     }
 
-    public ImageView getUpdateView() {
-        return mUpdateView;
-    }
 }

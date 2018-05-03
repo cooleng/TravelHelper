@@ -12,6 +12,7 @@
     <item
         android:id="@+id/action_add"
         android:title="添加"
-        app:showAsAction="always" />
+        android:icon="@mipmap/add_icon2"
+        app:showAsAction="ifRoom" />
 
 </menu>

@@ -1,20 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#F3F5F4</color>
-    <color name="colorPrimaryDark">#515051</color>
-    <color name="colorAccent">#D33D3C</color>
+    <color name="colorPrimaryDark">#38393C</color>
+    <color name="colorAccent">#38393C</color>
+
+
+    <color name="grey_1">#F3F5F4</color>
+    <color name="grey_2">#AEAEAE</color>
+    <color name="grey_3">#414141</color>
+    <color name="grey_4">#38393C</color>
+    <color name="grey_5">#757575</color>
+
+    <color name="green">#41B419</color>
 
     <color name="white">#ffffff</color>
-    <color name="red">#ff0000</color>
-    <color name="black">#000000</color>
-    <color name="grey">#515051</color>
-    <color name="lightGrey">#515051</color>
-    <color name="selector_grey">#DDDDDD</color>
+    <color name="red">#F94238</color>
+    <color name="blue">#227CD2</color>
+    <color name="orange">#ffab40</color>
 
-    <color name="tab_gb">#F3F5F4</color>
+
+    <color name="tab_gb">#EBEBEB</color>
     <color name="tab_normal_color">#515051</color>
-    <color name="tab_selected_color">#D33D3C</color>
+    <color name="tab_selected_color">#41B419</color>
 
-    <color name="greyWithAlpha">#51505160</color>
+
+
+    <color name="color_999999">#999999</color>
+    <color name="color_eeeeee">#eeeeee</color>
+    <color name="color_ffffff">#ffffff</color>
+    <color name="color_c61a04">#c61a04</color>
+    <color name="color_cccccc">#cccccc</color>
+    <color name="color_d81e06">#d81e06</color>
+    <color name="color_b0b8b2">#b0b8b2</color>
+    <color name="color_333333">#333333</color>
+    <color name="color_4caf50">#4caf50</color>
+    <color name="color_2e7d32">#2e7d32</color>\
+    <color name="color_e0e0e0">#e0e0e0</color>
 
 </resources>
