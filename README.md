@@ -29,9 +29,9 @@
 ![聊天][6]
 
 
-  [1]: ./images/搜周边.png "搜周边.png"
-  [2]: ./images/导航.png "导航.png"
-  [3]: ./images/备忘录列表.png "备忘录.png"
-  [4]: ./images/通讯录.png "通讯录.png"
-  [5]: ./images/评论.png "朋友圈.png"
-  [6]: ./images/聊天.png "聊天.png"
+  [1]: ./images/%E6%90%9C%E5%91%A8%E8%BE%B9.png "搜周边.png"
+  [2]: ./images/%E5%AF%BC%E8%88%AA.png "导航.png"
+  [3]: ./images/%E5%A4%87%E5%BF%98%E5%BD%95%E5%88%97%E8%A1%A8%0A%0A.png "备忘录.png"
+  [4]: ./images/%E5%A5%BD%E5%8F%8B%0A.png "通讯录.png"
+  [5]: ./images/%E8%AF%84%E8%AE%BA%0A.png "朋友圈.png"
+  [6]: ./images/%E8%81%8A%E5%A4%A9.png "聊天.png"
